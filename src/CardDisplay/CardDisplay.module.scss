@@ -1,0 +1,120 @@
+$cards: "visa", "mc", "amex", "discover";
+
+@mixin activate-cards() {
+	@each $activeName in $cards {
+
+		&.#{$activeName} {
+			@each $name in $cards {
+				@if $name != $activeName {
+					& > .#{$name} {
+						opacity: 0.25;
+					}
+				}
+			}
+		}
+
+	}
+}
+
+%opacity {
+	opacity: 1;
+	transition-property: opacity;
+	transition-duration: .5s;
+}
+
+.container {
+	display: inline-block;
+	white-space: no-wrap;
+	vertical-align: baseline;
+
+	& > * {
+		@extend %opacity;
+		display: inline-block;
+		width: 2em;
+		margin-right: .1em;
+	}
+
+	@include activate-cards;
+}
+
+%card-grid {
+	display: inline-grid;
+	grid: "v m"
+	      "a d";
+	width: 4.1em;
+	line-height: 0.1px;
+	vertical-align: middle;
+
+	& > * {
+		line-height: 0.1px;
+		width: 2em;
+		height: 100%;
+		padding: 0 .1em .1em 0;
+	}
+
+	svg {
+		display: block;
+	}
+
+	.mc {
+		grid-area: m;
+	}
+
+	.visa {
+		grid-area: v;
+	}
+
+	.amex {
+		grid-area: a;
+	}
+
+	.discover {
+		grid-area: d;
+	}
+}
+
+.square {
+	@extend %card-grid;
+
+	& > * {
+		@extend %opacity;
+	}
+
+	@include activate-cards;
+}
+
+@mixin activate-cards-expand() {
+	@each $activeName in $cards {
+
+		&.#{$activeName} {
+			@each $name in $cards {
+				@if $name == $activeName {
+					& > .#{$name} {
+						width: 4em;
+						padding: 0;
+					}
+				}
+				@else {
+					& > .#{$name} {
+						width: 0;
+						padding: 0;
+					}
+				}
+			}
+		}
+
+	}
+}
+
+.expand {
+	@extend %card-grid;
+	overflow: hidden;
+	height: 2.8em;
+
+	& > * {
+		transition-property: width, padding;
+		transition-duration: .5s;
+	}
+
+	@include activate-cards-expand;
+}
