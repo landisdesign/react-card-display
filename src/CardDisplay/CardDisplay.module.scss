@@ -1,18 +1,36 @@
 $cards: "visa", "mc", "amex", "discover";
 
-@mixin activate-cards() {
+@mixin activate($isActive: false) {
 	@each $activeName in $cards {
 
 		&.#{$activeName} {
 			@each $name in $cards {
-				@if $name != $activeName {
+				@if ($name == $activeName) == $isActive {
 					& > .#{$name} {
-						opacity: 0.25;
+						@content;
 					}
 				}
 			}
 		}
 
+	}
+}
+
+
+%inline {
+	display: inline-block;
+	white-space: no-wrap;
+	height: 1.3em;
+	vertical-align: bottom;
+
+	& > * {
+		display: inline-block;
+		width: 2em;
+		margin-right: .1em;
+	}
+
+	& > :last-child {
+		margin-right: 0;
 	}
 }
 
@@ -22,19 +40,39 @@ $cards: "visa", "mc", "amex", "discover";
 	transition-duration: .5s;
 }
 
+%expand {
+	transition-property: width, height, margin, padding;
+	transition-duration: .3s;
+}
+
 .container {
-	display: inline-block;
-	white-space: no-wrap;
-	vertical-align: baseline;
+	@extend %inline;
 
 	& > * {
 		@extend %opacity;
-		display: inline-block;
-		width: 2em;
-		margin-right: .1em;
 	}
 
-	@include activate-cards;
+	@include activate {
+		opacity: .25;
+	}
+}
+
+.container-expand {
+	@extend %inline;
+
+	& > * {
+		@extend %expand;
+	}
+
+	@each $card in $cards {
+		&.#{$card} > * {
+			margin: 0;
+		}
+	}
+
+	@include activate {
+		width: 0;
+	}
 }
 
 %card-grid {
@@ -80,41 +118,26 @@ $cards: "visa", "mc", "amex", "discover";
 		@extend %opacity;
 	}
 
-	@include activate-cards;
-}
-
-@mixin activate-cards-expand() {
-	@each $activeName in $cards {
-
-		&.#{$activeName} {
-			@each $name in $cards {
-				@if $name == $activeName {
-					& > .#{$name} {
-						width: 4em;
-						padding: 0;
-					}
-				}
-				@else {
-					& > .#{$name} {
-						width: 0;
-						padding: 0;
-					}
-				}
-			}
-		}
-
+	@include activate {
+		opacity: .25;
 	}
 }
 
-.expand {
+.square-expand {
 	@extend %card-grid;
-	overflow: hidden;
 	height: 2.8em;
 
 	& > * {
-		transition-property: width, padding;
-		transition-duration: .5s;
+		@extend %expand;
 	}
 
-	@include activate-cards-expand;
+	@include activate {
+		width: 0;
+		padding: 0;
+	}
+
+	@include activate(true) {
+		width: 4em;
+		padding: 0;
+	}
 }

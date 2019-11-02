@@ -1,29 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import './App.css';
 
-import CardDisplay from './CardDisplay';
+import CardInput from './CardInput';
 
 function App() {
 
-  const cards = ['visa', 'mc', 'amex', 'discover', ''];
-  let [currentCard, setCard] = useState('');
-
-  useEffect(() => {
-    setTimeout(() => {
-      let index = cards.indexOf(currentCard);
-      index++;
-      index %= cards.length;
-      setCard(cards[index]);
-    }, 4000);
-  });
-
   return (
-    <div>
-      <div>Expanding square: <CardDisplay active={currentCard} expand={true}/></div>
-      <hr />
-      <div>Square: <CardDisplay active={currentCard}/></div>
-      <hr />
-      <div>Line: <CardDisplay square={false} active={currentCard}/></div>
+    <div style={{margin: "1rem"}}>
+      <CardInput value='432a 43234' onChange={e => console.log(e.target.value)} />
     </div>
   );
 }
